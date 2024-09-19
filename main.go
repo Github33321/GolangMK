@@ -27,16 +27,6 @@ func getNextUserID() (int, error) {
 	return nextID, err
 }
 
-//	func registerUser(user User) error {
-//		nextID, err := getNextUserID()
-//		if err != nil {
-//			return err
-//		}
-//
-//		query := "INSERT INTO users (user_id, userlogin, userpassw) VALUES ($1, $2, $3)"
-//		_, err = db.Exec(query, nextID, user.UserLogin, user.UserPassw)
-//		return err
-//	}
 func userExists(userlogin string) (bool, error) {
 	var exists bool
 	query := "SELECT EXISTS(SELECT 1 FROM users WHERE userlogin = $1)"
@@ -92,6 +82,7 @@ func registrationHandler(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			fmt.Fprintf(w, "Пользователь %s успешно авторизован", login)
+			openBrowser("http://localhost:8081/")
 		}
 	} else {
 		// Отображение HTML формы

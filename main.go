@@ -82,7 +82,7 @@ func registrationHandler(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			fmt.Fprintf(w, "Пользователь %s успешно авторизован", login)
-			openBrowser("http://localhost:8081/")
+			openBrowser("http://localhost:8081/chat")
 		}
 	} else {
 		// Отображение HTML формы
@@ -172,8 +172,9 @@ func initDB() {
 func main() {
 	initDB()
 	defer db.Close()
-
+	http.HandleFunc("/chat", chat)
 	http.HandleFunc("/register", registrationHandler)
+
 	log.Println("Слушаем на порту :8081")
 	openBrowser("http://localhost:8081/register")
 	log.Fatal(http.ListenAndServe(":8081", nil))

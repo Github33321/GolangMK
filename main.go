@@ -70,7 +70,7 @@ func registrationHandler(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			fmt.Fprintf(w, "Пользователь %s успешно зарегистрирован", user.UserLogin)
-
+			openBrowser("http://localhost:8081/chat")
 		} else if r.FormValue("action") == "login" {
 
 			login := r.FormValue("login")

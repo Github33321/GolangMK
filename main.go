@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"os/exec"
 	"runtime"
 
@@ -170,14 +171,24 @@ func initDB() {
 }
 
 func main() {
+	if _, err := os.Stat("uploads"); os.IsNotExist(err) {
+		err = os.Mkdir("uploads", 0755)
+		if err != nil {
+			log.Fatal("Ошибка при создании папки uploads:", err)
+		}
+	}
 	initDB()
 	defer db.Close()
-	http.HandleFunc("/chat", chat)
 	http.HandleFunc("/register", registrationHandler)
-
+	http.Handle("/uploads/", http.StripPrefix("/uploads/", http.FileServer(http.Dir("uploads"))))
+	http.HandleFunc("/chat", chat)
+	//http.HandleFunc("/chat", chatokno)
 	log.Println("Слушаем на порту :8081")
-	openBrowser("http://localhost:8081/register")
+	openBrowser("http://localhost:8081/chat")
 	log.Fatal(http.ListenAndServe(":8081", nil))
+
+	openBrowser("http://localhost:8081/register")
+
 }
 
 // Функция для открытия браузера
